@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Lemon|Oswald|Anton|Montserrat|Nunito|Roboto" rel="stylesheet">
+
+    <title>Train Scheduler</title>
+</head>
+
+<body>
+    <style>
+        body {
+            background: url("pexels-photo.jpg");
+        }
+
+        .jumbotron {
+            border-radius: 4px;
+            padding: 10px;
+            background: #333;
+            color: white;
+            text-align: center;
+        }
+
+        button {
+            background: #333;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn {
+            background: #333;
+        }
+
+        .btn:hover {
+            background: #555 !important;
+        }
+
+        .container {
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            left: 0;
+            right: 0;
+            padding: 10px;
+        }
+
+        h1 {
+            font-family: 'Anton', sans-serif;
+        }
+
+        th {
+            font-family: 'Oswald', sans-serif;
+            font-size: 20px;
+        }
+
+        p,
+        td,
+        .form-group {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        table {
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .card {
+            margin-bottom: 10px;
+            opacity: 0.95;
+
+        }
+
+        .card-header {
+            background: #333;
+            color: white;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        form {
+            padding: 10px;
+        }
+.lead {
+    font-weight: 600;
+}
+        @media only screen and (max-width: 760px),
+        (min-device-width: 768px) and (max-device-width: 1024px) {
+
+            /* Force table to not be like tables anymore */
+            table,
+            thead,
+            tbody,
+            th,
+            td,
+            tr {
+                display: block;
+            }
+
+            /* Hide table headers (but not display: none;, for accessibility) */
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+
+            tr {
+                border: 1px solid #ccc;
+            }
+            tr:nth-of-type(odd) {
+                background: #eee;
+            }
+            td {
+                /* Behave  like a "row" */
+                border: none;
+                border-bottom: 1px solid #eee;
+                position: relative;
+                padding-left: 50%;
+            }
+
+            td:before {
+                /* Now like a table header */
+                position: absolute;
+                /* Top/left values mimic padding */
+                top: -6px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+            }
+
+            /*
+	Label the data
+	*/
+            td:nth-of-type(1):before {
+                content: "Train Name";
+                font-weight: bold;
+            }
+            td:nth-of-type(2):before {
+                content: "Destination";
+                font-weight: bold;
+            }
+            td:nth-of-type(3):before {
+                content: "Frequency (min)";
+                font-weight: bold;
+            }
+            td:nth-of-type(4):before {
+                content: "Next Arrival";
+                font-weight: bold;
+            }
+            td:nth-of-type(5):before {
+                content: "Minutes Away";
+                font-weight: bold;
+            }
+        }
+    </style>
+
+    <div class="container">
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <h1 class="display-4">Train Scheduler</h1>
+                <p class="lead">All aboard!</p>
+                <p class="time">Current time: </p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h4>Current Train Schedule</h4>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Train Name</th>
+                        <th scope="col">Destination</th>
+                        <th scope="col">Frequency (min)</th>
+                        <th scope="col">Next Arrival</th>
+                        <th scope="col">Minutes Away</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td scope="row">Midnight Train</td>
+                        <td>Anywhere</td>
+                        <td>30</td>
+                        <td>00:00</td>
+                        <td>?</td>
+                    </tr>
+                    <!-- <tr>
+                            <td scope="row">Chattanooga Choo-Choo</td >
+                            <td>Chattanooga</td>
+                            <td>30</td>
+                            <td>00:00</td>
+                            <td>?</td>
+                        </tr>-->
+                </tbody>
+            </table>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h4>Add Train</h4>
+            </div>
+            <form>
+                <div class="form-group">
+                    <label for="inputTrainName">Train Name</label>
+                    <input type="text" class="form-control" id="inputTrainName">
+                </div>
+                <div class="form-group">
+                    <label for="inputDestination">Destination</label>
+                    <input type="text" class="form-control" id="inputDestination">
+                </div>
+                <div class="form-group">
+                    <label for="inputTrainTime">First Train Time (HH:MM Military Time)</label>
+                    <input type="text" class="form-control" id="inputTrainTime">
+                </div>
+                <div class="form-group">
+                    <label for="inputFrequency">Frequency (min)</label>
+                    <input type="text" class="form-control" id="inputFrequency">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script>
+        //add trains from array
+        let d = new Date();
+        let n = d.toLocaleTimeString('en-GB');
+        console.log('n', n);
+        n = n.slice(0, -3);
+        $('.time').after("<p>" + n + "</p>");
+    </script>
+</body>
+
+</html>
