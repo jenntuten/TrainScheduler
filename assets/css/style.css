@@ -1,0 +1,161 @@
+body {
+    background: url("../images/pexels-photo.jpg");
+}
+
+.jumbotron {
+    border-radius: 4px;
+    padding: 10px;
+    background: #333;
+    color: white;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+button {
+    background: #333;
+    font-family: 'Montserrat', sans-serif;
+    outline: none !important;
+}
+
+.btn {
+    background: #333;
+    outline: none !important;
+}
+
+.btn:hover {
+    background: #555 !important;
+    border-color: #555;
+}
+
+.btn-primary {
+    border-color: #333
+}
+
+.container {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    padding: 10px;
+}
+
+.form-control:focus {
+    outline: green;
+    box-shadow: #555;
+}
+
+h1 {
+    font-family: 'Anton', sans-serif;
+}
+
+th {
+    font-family: 'Oswald', sans-serif;
+    font-size: 20px;
+}
+
+.add-trains {
+    text-align: left;
+}
+
+p,
+td,
+.form-group {
+    font-family: 'Montserrat', sans-serif;
+}
+
+table {
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.card {
+    margin-bottom: 10px;
+    opacity: 0.95;
+}
+
+.card-header {
+    background: #333;
+    color: white;
+    font-family: 'Oswald', sans-serif;
+    margin-right: -1px;
+    margin-left: -1px;
+    margin-top: -1px;
+    padding: 14px;
+}
+
+form {
+    padding: 10px;
+}
+
+.lead {
+    font-weight: 600;
+}
+
+@media only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px) {
+
+    /* Force table to not be like tables anymore */
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+
+    /* Hide table headers (but not display: none;, for accessibility) */
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    tr {
+        border: 1px solid #ccc;
+    }
+    tr:nth-of-type(odd) {
+        background: #eee;
+    }
+    td {
+        /* Behave  like a "row" */
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 50%;
+    }
+
+    td:before {
+        /* Now like a table header */
+        position: absolute;
+        /* Top/left values mimic padding */
+        top: -4px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+    }
+    /*
+Label the data
+*/
+    td:nth-of-type(1):before {
+        content: "Train Name";
+        font-weight: bold;
+    }
+    td:nth-of-type(2):before {
+        content: "Destination";
+        font-weight: bold;
+    }
+    td:nth-of-type(3):before {
+        content: "Frequency (min)";
+        font-weight: bold;
+    }
+    td:nth-of-type(4):before {
+        content: "Next Arrival";
+        font-weight: bold;
+    }
+    td:nth-of-type(5):before {
+        content: "Minutes Away";
+        font-weight: bold;
+    }
+}
