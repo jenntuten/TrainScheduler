@@ -1,30 +1,36 @@
 $(document).ready(function () {
-    let trainName;
-    let destination;
-    let firstTrainTime;
-    let trainFrequency;
-    let frequency;
-    let rows;
-    let columns;
-    let newTrainName;
-    let newDestination;
-    let newTrainFrequency;
-    let newTrainTime;
 
-    let trains = [
-        {
-            trainName: "Midnight Train",
-            trainDestination: 'Anywhere',
-            nextArrival: '00:00',
-            trainFrequency: "?"
-        },
-        {
-            trainName: "Crazy Train",
-            trainDestination: "Off the rails",
-            nextArrival: "10:00",
-            trainFrequency: "60"
-        }
-    ];
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyCd5USxCV_HCL_Xwd9oveZVBHI5Ks5BpzA",
+        authDomain: "trainscheduler-b2a05.firebaseapp.com",
+        databaseURL: "https://trainscheduler-b2a05.firebaseio.com",
+        projectId: "trainscheduler-b2a05",
+        storageBucket: "",
+        messagingSenderId: "38425213653"
+    };
+    firebase.initializeApp(config);
+
+
+    let trains = [];
+
+    let database = firebase.database();
+
+    database.ref().on("child_added", function (snapshot) {
+
+        // Log everything that's coming out of snapshot
+        console.log('snapshot.val(existing)', snapshot.val());
+        let existingData = snapshot.val();
+
+        console.log('existing data: ', existingData);
+
+        trains.push(existingData);
+        console.log('trains: ', trains);
+
+        // Handle the errors
+    }, function (errorObject) {
+        console.log("Errors handled: " + errorObject.code);
+    });
 
     let rowItems = trains.map(function (p) {
         return '<tr><td>' + p.trainName + '</td><td>' + p.trainDestination + '</td><td>' + p.trainFrequency + '</td><td>' + p.nextArrival + '</td></tr>';
@@ -41,18 +47,27 @@ $(document).ready(function () {
     n = n.slice(0, -3);
     $('.time').after("<p>" + n + "</p>");
 
-    $('#submit').on('click', function () {
+    $('#submit').on('click', function (event) {
+        event.preventDefault();
+
         console.log('submit clicked');
-        $(".add-trains").after(function () {
-            return "<tr class='new-trains'></tr>";
+
+        train = $('#inputTrainName').val().trim();
+        dest = $('#inputDestination').val().trim();
+        freq = $('#inputFrequency').val().trim();
+        time = $('#inputTrainTime').val().trim();
+
+        database.ref().push({
+            train: train,
+            dest: dest,
+            freq: freq,
+            time: time,
+            dateAdded: firebase.database.ServerValue.TIMESTAMP
         });
-        newTrainName = $('#inputTrainName').val();
-        newDestination = $('#inputDestination').val();
-        newTrainFrequency = $('#inputFrequency').val();
-        newTrainTime = $('#inputTrainTime').val();
-        trains.push({ trainName: newTrainName, trainDestination: newDestination, nextArrival: newTrainTime, trainFrequency: newTrainFrequency });
+
+        /*trains.push({ trainName: newTrainName, trainDestination: newDestination, nextArrival: newTrainTime, trainFrequency: newTrainFrequency });*/
         rowItems = trains.map(function (p) {
-            return '<tr><td>' + p.trainName + '</td><td>' + p.trainDestination + '</td><td>' + p.trainFrequency + '</td><td>' + p.nextArrival + '</td></tr>';
+            return '<tr><td>' + p.train + '</td><td>' + p.dest + '</td><td>' + p.freq + '</td><td>' + p.time + '</td></tr>';
         });
         tableHead = '<tr><th>Train Name</th><th>Destination</th><th>Frequency (min)</th><th>Next Arrival</th><th>Minutes Away</th></tr>';
         createTable = '<table> ' + tableHead + rowItems.join('') + ' </table>';
