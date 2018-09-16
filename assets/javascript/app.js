@@ -26,9 +26,9 @@ $(document).ready(function () {
         trains.push(existingData);
         console.log('trains: ', trains);
         let rowItems = trains.map(function (p) {
-            return '<tr><td>' + p.train + '</td><td>' + p.dest + '</td><td>' + p.freq + '</td><td>' + p.time + '</td></tr>';
+            return '<tr><td>' + p.train + '</td><td>' + p.dest + '</td><td>' + p.freq + '</td><td>' + p.time + '</td><td>' + p.tMinutesTillTrain + '</td></tr>';
         });
-    
+
         let tableHead = '<tr><th>Train Name</th><th>Destination</th><th>Frequency (min)</th><th>Next Arrival</th><th>Minutes Away</th></tr>';
         let createTable = '<table> ' + tableHead + rowItems.join('') + ' </table>';
         $(".table").html(createTable);
@@ -41,24 +41,41 @@ $(document).ready(function () {
     console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
     $('.time').after("<p>" + moment(currentTime).format("hh:mm") + "</p>");
 
+
+
     $('#submit').on('click', function (event) {
         event.preventDefault();
 
         train = $('#inputTrainName').val().trim();
         dest = $('#inputDestination').val().trim();
         freq = $('#inputFrequency').val().trim();
+        console.log('freq: ', freq);
         time = $('#inputTrainTime').val().trim();
+        console.log('train time input: ', time)
+
+        let timeConverted = moment(time, "HH:mm").subtract(1, "years");
+        console.log('timeconverted: ', timeConverted);
+
+        let diffTime = moment().diff(moment(timeConverted), "minutes");
+        console.log("DIFFERENCE IN TIME: " + diffTime);
+
+        let tRemainder = diffTime % freq;
+        console.log('tremainder: ', tRemainder);
+
+        let tMinutesTillTrain = freq - tRemainder;
+        console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain); 
 
         database.ref().push({
             train: train,
             dest: dest,
             freq: freq,
             time: time,
+            tMinutesTillTrain: tMinutesTillTrain,
             dateAdded: firebase.database.ServerValue.TIMESTAMP
         });
 
         rowItems = trains.map(function (p) {
-            return '<tr><td>' + p.train + '</td><td>' + p.dest + '</td><td>' + p.freq + '</td><td>' + p.time + '</td></tr>';
+            return '<tr><td>' + p.train + '</td><td>' + p.dest + '</td><td>' + p.freq + '</td><td>' + p.time + '</td><td>' + p.tMinutesTillTrain + '</td></tr>';
         });
         tableHead = '<tr><th>Train Name</th><th>Destination</th><th>Frequency (min)</th><th>Next Arrival</th><th>Minutes Away</th></tr>';
         createTable = '<table> ' + tableHead + rowItems.join('') + ' </table>';
