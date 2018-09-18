@@ -11,20 +11,33 @@ $(document).ready(function () {
     };
     firebase.initializeApp(config);
 
+    //Array to store train data
     let trains = [];
 
     let database = firebase.database();
 
     database.ref().on("child_added", function (snapshot) {
 
-        // Log everything that's coming out of snapshot
-        console.log('snapshot.val(existing)', snapshot.val());
-        let existingData = snapshot.val();
+        //Calculations for next arrival/minutes away based on frequency and first train
+        let timeConverted = moment(snapshot.val().time, "HH:mm").subtract(1, "years");
+        let diffTime = moment().diff(moment(timeConverted), "minutes");
+        let tRemainder = diffTime % snapshot.val().freq;
+        let tMinutesTillTrain = snapshot.val().freq - tRemainder;
+        let nextTrain = moment().add(tMinutesTillTrain, "minutes");
 
-        console.log('existing data: ', existingData);
+        //Create new object to store snapshots and calculations
+        let newData = {
+            train: snapshot.val().train,
+            time: snapshot.val().time,
+            dest: snapshot.val().dest,
+            freq: snapshot.val().freq,
+            nextTrain: moment(nextTrain).format("hh:mm"),
+            tMinutesTillTrain: tMinutesTillTrain
+        }
+        //Push data to trains array
+        trains.push(newData);
 
-        trains.push(existingData);
-        console.log('trains: ', trains);
+        //Mapping data to create table
         let rowItems = trains.map(function (p) {
             return '<tr><td>' + p.train + '</td><td>' + p.dest + '</td><td>' + p.freq + '</td><td>' + p.nextTrain + '</td><td>' + p.tMinutesTillTrain + '</td></tr>';
         });
@@ -38,53 +51,26 @@ $(document).ready(function () {
     });
 
     let currentTime = moment();
-    console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
     $('.time').after("<p>" + moment(currentTime).format("hh:mm") + "</p>");
 
     $('#submit').on('click', function (event) {
         event.preventDefault();
 
+        //Pull user input
         train = $('#inputTrainName').val().trim();
         dest = $('#inputDestination').val().trim();
         freq = $('#inputFrequency').val().trim();
-        console.log('freq: ', freq);
         time = $('#inputTrainTime').val().trim();
-        console.log('train time input: ', time)
 
-        let timeConverted = moment(time, "HH:mm").subtract(1, "years");
-        console.log('timeconverted: ', timeConverted);
-
-        let diffTime = moment().diff(moment(timeConverted), "minutes");
-        console.log("DIFFERENCE IN TIME: " + diffTime);
-
-        let tRemainder = diffTime % freq;
-        console.log('tremainder: ', tRemainder);
-
-        let tMinutesTillTrain = freq - tRemainder;
-        console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain);
-
-        let nextTrain = moment().add(tMinutesTillTrain, "minutes");
-        console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
-
+        //Push user input to Firebase
         database.ref().push({
             train: train,
             dest: dest,
             freq: freq,
-            nextTrain: moment(nextTrain).format("hh:mm"),
-            tMinutesTillTrain: tMinutesTillTrain,
-            dateAdded: firebase.database.ServerValue.TIMESTAMP
+            time: time,
         });
 
-        rowItems = trains.map(function (p) {
-            return '<tr><td>' + p.train + '</td><td>' + p.dest + '</td><td>' + p.freq + '</td><td>' + p.nextTrain + '</td><td>' + p.tMinutesTillTrain + '</td></tr>';
-        });
-        tableHead = '<tr><th>Train Name</th><th>Destination</th><th>Frequency (min)</th><th>Next Arrival</th><th>Minutes Away</th></tr>';
-        createTable = '<table> ' + tableHead + rowItems.join('') + ' </table>';
-
-        //Show new table
-        $(".table").html(createTable);
-
-        //Clear form fields
+        //Clear user input
         $('.form-control').val('');
     })
 })
